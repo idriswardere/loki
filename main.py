@@ -1,17 +1,22 @@
 # Importing appropriate libraries
-import os
-import openai
-from dotenv import load_dotenv
-
-from core.utils import load_modules, get_response, get_reply, create_prompt
-
 debug = False
+from dotenv import load_dotenv
+from core.utils import load_modules, create_prompt
+from core.llms import GPT3
 
-# Defining prompt modules
-modules = load_modules()
+load_dotenv() # Loading secret API keys
+modules = load_modules() # Defining prompt modules
+
+llms_dict = {"GPT3" : GPT3}
 
 # Initializing conversation details with input
-npc_name = input("Who would you like to speak to?\nOptions: [Shu]\n") # character being spoken to
+llm_names = llms_dict.keys()
+llm_name = input("Which LLM would you like to use for response generation?\nOptions: [" + " ".join(llm_names) + "]\n")
+llm = llms_dict[llm_name]()
+
+npc_names = modules['characters'].keys()
+npc_name = input("Who would you like to speak to?\nOptions: [" + " ".join(npc_names) + "]\n") # character being spoken to
+
 player_desc = input("Write a description of your player's character.\n(e.g. A non-magical goblin who is wearing chainmail armor and leather boots. Is very strong physically.)\n")
 player_msg = input(f"You are speaking to {npc_name}. What do you want to say?\n")
 
@@ -22,15 +27,14 @@ modules['task'] = modules['task'].format(npc_name=npc_name)
 
 # Defining response prompt (with reflection)
 # TODO: prompt_list should also automatically include modules available to npc_name added after global
-module_names = ['global', npc_name, 'player', 'current_interaction', 'task']
+module_names = ['global', "characters/"+npc_name, 'player', 'current_interaction', 'task']
 prompt = create_prompt(modules, module_names)
 
 failed_prompts = 0
 max_failed_prompts = 1
 while player_msg.lower() != "exit":
     # Get response from prompt and extract reply/reflections from it
-    response = get_response(prompt)
-    reply, reflection = get_reply(response)
+    reply, reflection = llm.get_response(prompt)
     if not reply or not reflection: # if prompt fails, allow retry until we retry a certain amount of times
         failed_prompts += 1
         if failed_prompts >= max_failed_prompts:
@@ -50,7 +54,7 @@ while player_msg.lower() != "exit":
     player_msg = input("Enter a response: ")
     modules['current_interaction'] += f"""\nThe player responded: “{player_msg}”"""
 
-    module_names = ['global', npc_name, 'player', 'current_interaction', 'task']
+    module_names = ['global', "characters/"+npc_name, 'player', 'current_interaction', 'task']
     prompt = create_prompt(modules, module_names)
 
     # Printing the prompt for debugging purposes
