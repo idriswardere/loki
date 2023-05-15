@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 from core.utils import load_modules, get_response, get_reply, create_prompt
 
-debug = True
+debug = False
 
 # Defining prompt modules
 modules = load_modules()
@@ -36,11 +36,10 @@ while player_msg.lower() != "exit":
         if failed_prompts >= max_failed_prompts:
             break
         continue
-    
-    if debug:
-        print("--REFLECTIONS--")
-        print(reflection)
-        
+
+    print("-----------------------------")
+    print("--REFLECTIONS--")
+    print(reflection)
     print("--CURRENT INTERACTION--")
     print(modules['current_interaction'] + "\n")
     print("-----REPLY-----")
