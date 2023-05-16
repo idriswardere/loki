@@ -23,6 +23,29 @@ def load_modules(root="modules"):
     
     return modules
 
+
+def parse_reply_reflection(response_str, debug=False):
+    reply_start_tag, reply_end_tag = "<r>", "</r>"
+    reply_start_idx = response_str.find(reply_start_tag)
+    reply_end_idx = response_str.find(reply_end_tag)
+
+    # Safety checks on response
+    tags_exist = (reply_start_idx >= 0 and reply_end_idx >= 0) # both exist
+    tags_ordered_correctly = (reply_start_idx+3 < reply_end_idx)  # start tag is before end tag
+    tags_occur_once = (response_str.count(reply_start_tag) == 1 and response_str.count(reply_end_tag) == 1) # both only occur once
+
+
+    if tags_exist and tags_ordered_correctly and tags_occur_once:
+        reply = response_str[reply_start_idx+3:reply_end_idx]
+        reflection = response_str[:reply_start_idx]
+        return reply, reflection
+
+    if debug:
+        print("---REPLY NOT FOUND--RESPONSE BELOW---")
+        print(response_str)
+        print("-------------------------------------")
+    return None, None
+
 def create_prompt(modules, module_names):
     module_splits = [name.split("/") for name in module_names]
     for i, split in enumerate(module_splits):
