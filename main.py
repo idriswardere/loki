@@ -3,6 +3,7 @@ debug = False
 from dotenv import load_dotenv
 from core.utils import load_modules, create_prompt
 from core.llms import GPT3
+from core.details import Details
 
 load_dotenv() # Loading secret API keys
 modules = load_modules() # Defining prompt modules
@@ -20,14 +21,21 @@ npc_name = input("Who would you like to speak to?\nOptions: [" + " ".join(npc_na
 player_desc = input("Write a description of your player's character.\n(e.g. A non-magical goblin who is wearing chainmail armor and leather boots. Is very strong physically.)\n")
 player_msg = input(f"You are speaking to {npc_name}. What do you want to say?\n")
 
+# Initializing relevant details
+details = Details(npc_name)
+relevant_details_list = details.query(player_msg)
+relevant_details = "\n".join(relevant_details_list)
+modules['relevant_details'] = modules['relevant_details'].format(relevant_details=relevant_details)
+
+
 # Initializing prompt parts
 modules['player'] = modules['player'].format(player_desc=player_desc)
-modules['current_interaction'] = modules['initial_interaction'].format(npc_name=npc_name, player_msg=player_msg)
+modules['current_interaction'] = modules['current_interaction'].format(npc_name=npc_name, player_msg=player_msg)
 modules['task'] = modules['task'].format(npc_name=npc_name)
 
 # Defining response prompt (with reflection)
 # TODO: prompt_list should also automatically include modules available to npc_name added after global
-module_names = ['global', "characters/"+npc_name, 'player', 'current_interaction', 'task']
+module_names = ['global', 'relevant_details', 'characters/'+npc_name, 'player', 'current_interaction', 'task']
 prompt = create_prompt(modules, module_names)
 
 failed_prompts = 0
@@ -54,7 +62,7 @@ while player_msg.lower() != "exit":
     player_msg = input("Enter a response: ")
     modules['current_interaction'] += f"""\nThe player responded: “{player_msg}”"""
 
-    module_names = ['global', "characters/"+npc_name, 'player', 'current_interaction', 'task']
+    module_names = ['global', 'relevant_details', 'characters/'+npc_name, 'player', 'current_interaction', 'task']
     prompt = create_prompt(modules, module_names)
 
     # Printing the prompt for debugging purposes
