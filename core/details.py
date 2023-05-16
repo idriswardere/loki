@@ -22,14 +22,14 @@ class Shu(Details):
 
         self.index = pinecone.Index(index_name=self.npc_name)
 
-    def query(self, player_msg) -> list[str]:
+    def query(self, player_msg, k=3) -> list[str]:
         # getting embeddings
         query_embedding = openai.Embedding.create(input = [player_msg], model='text-embedding-ada-002')['data'][0]['embedding']
 
         # querying
         query_response = self.index.query(
             vector=query_embedding,
-            top_k = 3,
+            top_k = k,
             include_values=False
         )
 

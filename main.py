@@ -17,13 +17,13 @@ llm = llms_dict[llm_name]()
 
 npc_names = modules['characters'].keys()
 npc_name = input("Who would you like to speak to?\nOptions: [" + " ".join(npc_names) + "]\n") # character being spoken to
-
+k = int(input("How many world details would you like the character to be able to pull from the database?\n"))
 player_desc = input("Write a description of your player's character.\n(e.g. A non-magical goblin who is wearing chainmail armor and leather boots. Is very strong physically.)\n")
 player_msg = input(f"You are speaking to {npc_name}. What do you want to say?\n")
 
 # Initializing relevant details
 details = Shu()
-relevant_details_list = details.query(player_msg)
+relevant_details_list = details.query(player_msg, k=k)
 relevant_details = "\n".join(relevant_details_list)
 modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
 
@@ -50,6 +50,8 @@ while player_msg.lower() != "exit":
         continue
 
     print("-----------------------------")
+    print("--RELEVANT DETAILS--")
+    print(relevant_details + "\n")
     print("--REFLECTIONS--")
     print(reflection)
     print("--CURRENT INTERACTION--")
@@ -63,7 +65,7 @@ while player_msg.lower() != "exit":
     modules['current_interaction'] += f"""\nThe player responded: “{player_msg}”"""
 
     # Updating relevant details
-    relevant_details_list = details.query(player_msg)
+    relevant_details_list = details.query(player_msg, k=k)
     relevant_details = "\n".join(relevant_details_list)
     modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
 
