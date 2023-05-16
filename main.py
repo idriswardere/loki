@@ -1,9 +1,9 @@
 # Importing appropriate libraries
-debug = False
+debug = True
 from dotenv import load_dotenv
 from core.utils import load_modules, create_prompt
 from core.llms import GPT3
-from core.details import Details
+from core.details import Details, Shu
 
 load_dotenv() # Loading secret API keys
 modules = load_modules() # Defining prompt modules
@@ -22,7 +22,7 @@ player_desc = input("Write a description of your player's character.\n(e.g. A no
 player_msg = input(f"You are speaking to {npc_name}. What do you want to say?\n")
 
 # Initializing relevant details
-details = Details(npc_name)
+details = Shu()
 relevant_details_list = details.query(player_msg)
 relevant_details = "\n".join(relevant_details_list)
 modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)

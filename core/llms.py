@@ -9,7 +9,7 @@ class LLM():
         # Initialize the LLM details here.
         pass
 
-    def get_response(self, prompt) -> tuple(str, str):
+    def get_response(self, prompt) -> tuple[str, str]:
         # Return (reply, reflection) given the prompt.
         pass
 

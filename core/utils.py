@@ -1,5 +1,4 @@
 import os
-import openai
 from dotenv import load_dotenv
 
 # Create modules dict containing text from the modules directory
