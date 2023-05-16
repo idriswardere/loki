@@ -25,7 +25,7 @@ player_msg = input(f"You are speaking to {npc_name}. What do you want to say?\n"
 details = Details(npc_name)
 relevant_details_list = details.query(player_msg)
 relevant_details = "\n".join(relevant_details_list)
-modules['relevant_details'] = modules['relevant_details'].format(relevant_details=relevant_details)
+modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
 
 
 # Initializing prompt parts
@@ -57,10 +57,15 @@ while player_msg.lower() != "exit":
     print("-----REPLY-----")
     print(reply + "\n")
 
-    # Update prompt list with new current interaction
+    # Updating prompt list with new current interaction
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
     player_msg = input("Enter a response: ")
     modules['current_interaction'] += f"""\nThe player responded: “{player_msg}”"""
+
+    # Updating relevant details
+    relevant_details_list = details.query(player_msg)
+    relevant_details = "\n".join(relevant_details_list)
+    modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
 
     module_names = ['global', 'relevant_details', 'characters/'+npc_name, 'player', 'current_interaction', 'task']
     prompt = create_prompt(modules, module_names)
