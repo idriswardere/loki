@@ -25,7 +25,7 @@ class GPT3(LLM):
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=prompt,
-            temperature=0.7,
+            temperature=0.45,
             max_tokens=512,
             top_p=1,
             frequency_penalty=0,

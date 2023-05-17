@@ -31,7 +31,8 @@ modules['relevant_details'] = modules['relevant_details_template'].format(releva
 # Initializing prompt parts
 modules['player'] = modules['player'].format(player_desc=player_desc)
 modules['current_interaction'] = modules['current_interaction'].format(npc_name=npc_name, player_msg=player_msg)
-modules['task'] = modules['task'].format(npc_name=npc_name)
+original_task = modules['task']
+modules['task'] = modules['task'].format(npc_name=npc_name, player_msg=player_msg)
 
 # Defining response prompt (with reflection)
 # TODO: prompt_list should also automatically include modules available to npc_name added after global
@@ -68,6 +69,8 @@ while player_msg.lower() != "exit":
     relevant_details_list = details.query(player_msg, k=k)
     relevant_details = "\n".join(relevant_details_list)
     modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
+
+    modules['task'] = original_task.format(npc_name=npc_name, player_msg=player_msg)
 
     module_names = ['global', 'relevant_details', 'characters/'+npc_name, 'player', 'current_interaction', 'task']
     prompt = create_prompt(modules, module_names)
