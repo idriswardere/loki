@@ -12,14 +12,21 @@ llms_dict = {"GPT3" : GPT3}
 
 # Initializing conversation details with input
 llm_names = llms_dict.keys()
-llm_name = input("Which LLM would you like to use for response generation?\nOptions: [" + " ".join(llm_names) + "]\n")
+llm_name = input("Which LLM would you like to use for response generation?\nOptions: [" + " ".join(llm_names) + "]\n> ")
+while llm_name not in llms_dict:
+    llm_name = input("LLM not found. Please try again. (Note: LLM name is case-sensitive.)\n> ")
+
 llm = llms_dict[llm_name]()
 
 npc_names = modules['characters'].keys()
-npc_name = input("Who would you like to speak to?\nOptions: [" + " ".join(npc_names) + "]\n") # character being spoken to
-k = int(input("How many world details would you like the character to be able to pull from the database?\n"))
-player_desc = input("Write a description of your player's character.\n(e.g. A non-magical goblin who is wearing chainmail armor and leather boots. Is very strong physically.)\n")
-player_msg = input(f"You are speaking to {npc_name}. What do you want to say?\n")
+npc_name = input("Who would you like to speak to?\nOptions: [" + " ".join(npc_names) + "]\n> ") # character being spoken to
+
+while npc_name not in modules['characters']:
+    npc_name = input("Character not found. Please try again. (Note: Character name is case-sensitive.)\n> ")
+
+k = int(input("How many world details would you like the character to be able to pull from the database?\n> "))
+player_desc = input("Write a description of your player's character.\n(e.g. A non-magical goblin who is wearing chainmail armor and leather boots. Is very strong physically.)\n> ")
+player_msg = input(f"You are speaking to {npc_name}. What do you want to say?\n> ")
 
 # Initializing relevant details
 details = Shu()
@@ -43,6 +50,7 @@ failed_prompts = 0
 max_failed_prompts = 1
 while player_msg.lower() != "exit":
     # Get response from prompt and extract reply/reflections from it
+    print("Loading response...", end='\r')
     reply, reflection = llm.get_response(prompt)
     if not reply or not reflection: # if prompt fails, allow retry until we retry a certain amount of times
         failed_prompts += 1
