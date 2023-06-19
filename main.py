@@ -1,10 +1,11 @@
 # Importing appropriate libraries
 debug = True
 from dotenv import load_dotenv
-from core.utils import load_modules, create_prompt
+from core.utils import load_modules, create_prompt, prepare_for_tts
 from core.llms import GPT3
 from core.details import Pinecone
 from TTS.api import TTS
+import winsound
 
 load_dotenv() # Loading secret API keys
 modules = load_modules() # Defining prompt modules
@@ -47,12 +48,22 @@ modules['task'] = modules['task'].format(npc_name=npc_name, player_msg=player_ms
 module_names = ['global', 'relevant_details', 'characters/'+npc_name, 'player', 'current_interaction', 'task']
 prompt = create_prompt(modules, module_names)
 
+# Initializing Coqui Studio TTS
+# TODO: Make the speaker come from metadata of the chosen npc_name (character jsons?)
+speaker_name = "Abrahan Mack" # Shu's speaker
+tts_model_name = f"coqui_studio/en/{speaker_name}/coqui_studio"
+tts = TTS(model_name=tts_model_name)
+SPEECH_OUTPUT_PATH = "./speech.wav"
+
 failed_prompts = 0
 max_failed_prompts = 1
 while player_msg.lower() != "exit":
     # Get response from prompt and extract reply/reflections from it
     print("Loading response...", end='\r')
     reply, reflection = llm.get_response(prompt)
+    # Create & play sound
+    tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
+    winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
     if not reply or not reflection: # if prompt fails, allow retry until we retry a certain amount of times
         failed_prompts += 1
         if failed_prompts >= max_failed_prompts:

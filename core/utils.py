@@ -55,3 +55,9 @@ def create_prompt(modules, module_names):
         
     prompt = "\n\n".join(module_splits)
     return prompt
+
+def prepare_for_tts(text): # attempts to trim quotations that sometimes appear
+    if not text[0].isalpha():
+        return text[1:-1]
+    else:
+        return text
