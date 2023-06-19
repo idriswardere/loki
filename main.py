@@ -61,9 +61,7 @@ while player_msg.lower() != "exit":
     # Get response from prompt and extract reply/reflections from it
     print("Loading response...", end='\r')
     reply, reflection = llm.get_response(prompt)
-    # Create & play sound
-    tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
-    winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
+    
     if not reply or not reflection: # if prompt fails, allow retry until we retry a certain amount of times
         failed_prompts += 1
         if failed_prompts >= max_failed_prompts:
@@ -79,6 +77,10 @@ while player_msg.lower() != "exit":
     print(modules['current_interaction'] + "\n")
     print("-----REPLY-----")
     print(reply + "\n")
+
+    # Creating & play sound
+    tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
+    winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
 
     # Updating prompt list with new current interaction
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
