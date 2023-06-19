@@ -11,16 +11,17 @@ class Details():
         # Returns list of details
         pass
 
-class Shu(Details):
+class Pinecone(Details):
 
-    def __init__(self):
-        self.npc_name = "shu"
+    def __init__(self, npc_name):
+        self.npc_name = npc_name
+        index_name = f"{npc_name.lower()}-index"
 
         # init apis
         openai.api_key = os.getenv("OPENAI_API_KEY")
         pinecone.init(api_key=os.getenv("PINECONE_API_KEY"), environment="asia-southeast1-gcp-free")
 
-        self.index = pinecone.Index(index_name=self.npc_name)
+        self.index = pinecone.Index(index_name=index_name)
 
     def query(self, player_msg, k=3) -> list[str]:
         # getting embeddings
