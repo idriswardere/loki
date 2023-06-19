@@ -52,7 +52,7 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
 
     # Initializing relevant details
     details = Shu()
-    relevant_details_list = details.query(player_msg, k=new_k)
+    relevant_details_list = "" #details.query(player_msg, k=new_k)
     relevant_details = "\n".join(relevant_details_list)
     modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
 
@@ -75,8 +75,7 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
         newPlayerMessageRepeated(failed_prompts, prompt)
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
-    return "" + new_llm + new_npc_name + new_k + player_desc + player_msg
-
+    return reply
     
 
 @app.route("/newMessage/<player_msg>")
@@ -101,7 +100,7 @@ def newPlayerMessageRepeated(failed_prompts, player_msg):
     modules['current_interaction'] += f"""\nThe player responded: “{player_msg}”"""
 
     # Updating relevant details
-    relevant_details_list = details.query(player_msg, k=k)
+    relevant_details_list = "" # details.query(player_msg, k=k)
     relevant_details = "\n".join(relevant_details_list)
     modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
 
@@ -123,4 +122,4 @@ def newPlayerMessageRepeated(failed_prompts, player_msg):
         print('--PROMPT--')
         print(prompt + "\n")
 
-    return "" + player_msg
+    return reply
