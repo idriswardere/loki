@@ -6,6 +6,7 @@ from core.llms import GPT3
 from core.details import Pinecone
 from TTS.api import TTS
 import winsound
+import json
 
 load_dotenv() # Loading secret API keys
 modules = load_modules() # Defining prompt modules
@@ -36,22 +37,28 @@ relevant_details_list = details.query(player_msg, k=k)
 relevant_details = "\n".join(relevant_details_list)
 modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
 
-
 # Initializing prompt parts
 modules['player'] = modules['player'].format(player_desc=player_desc)
 modules['current_interaction'] = modules['current_interaction'].format(npc_name=npc_name, player_msg=player_msg)
 original_task = modules['task']
 modules['task'] = modules['task'].format(npc_name=npc_name, player_msg=player_msg)
 
+# TODO: jsonify
+#module_names = ['global', 'relevant_details', 'characters/'+npc_name, 'player', 'current_interaction', 'task']
+#speaker_name = "Abrahan Mack" # Shu's speaker
+NPC_MAP_PATH = "./modules/characters/npc_map.json"
+
+with open(NPC_MAP_PATH) as f:
+    npc_map = json.load(f)
+
+module_names = npc_map[npc_name]["modules"]
+speaker = npc_map[npc_name]["speaker"]
+
 # Defining response prompt (with reflection)
-# TODO: prompt_list should also automatically include modules available to npc_name added after global
-module_names = ['global', 'relevant_details', 'characters/'+npc_name, 'player', 'current_interaction', 'task']
 prompt = create_prompt(modules, module_names)
 
 # Initializing Coqui Studio TTS
-# TODO: Make the speaker come from metadata of the chosen npc_name (character jsons?)
-speaker_name = "Abrahan Mack" # Shu's speaker
-tts_model_name = f"coqui_studio/en/{speaker_name}/coqui_studio"
+tts_model_name = f"coqui_studio/en/{speaker}/coqui_studio"
 tts = TTS(model_name=tts_model_name)
 SPEECH_OUTPUT_PATH = "./speech.wav"
 
