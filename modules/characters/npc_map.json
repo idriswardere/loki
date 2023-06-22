@@ -1,0 +1,6 @@
+{
+    "Shu": {
+        "modules": ["global", "relevant_details", "characters/Shu", "player", "current_interaction", "task"],
+        "speaker": "Abrahan Mack"
+    }
+}
