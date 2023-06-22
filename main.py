@@ -36,24 +36,7 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     npc_name = new_npc_name
 
     llms_dict = {"GPT3" : GPT3}
-
-    # Initializing conversation details with input
-    # llm_names = llms_dict.keys()
-    # llm_name = input("Which LLM would you like to use for response generation?\nOptions: [" + " ".join(llm_names) + "]\n> ")
-    # while llm_name not in llms_dict:
-    #     llm_name = input("LLM not found. Please try again. (Note: LLM name is case-sensitive.)\n> ")
-
     llm = llms_dict[new_llm]()
-
-    # npc_names = modules['characters'].keys()
-    # npc_name = input("Who would you like to speak to?\nOptions: [" + " ".join(npc_names) + "]\n> ") # character being spoken to
-
-    # while npc_name not in modules['characters']:
-    #     npc_name = input("Character not found. Please try again. (Note: Character name is case-sensitive.)\n> ")
-
-    # k = int(input("How many world details would you like the character to be able to pull from the database?\n> "))
-    # player_desc = input("Write a description of your player's character.\n(e.g. A non-magical goblin who is wearing chainmail armor and leather boots. Is very strong physically.)\n> ")
-    # player_msg = input(f"You are speaking to {npc_name}. What do you want to say?\n> ")
 
     # Initializing relevant details
     details = Pinecone(npc_name)
@@ -67,13 +50,10 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     original_task = modules['task']
     modules['task'] = modules['task'].format(npc_name=new_npc_name, player_msg=player_msg)
 
-    #module_names = ['global', 'relevant_details', 'characters/'+npc_name, 'player', 'current_interaction', 'task']
-    #speaker_name = "Abrahan Mack" # Shu's speaker
-    NPC_MAP_PATH = "./modules/characters/npc_map.json"
 
+    NPC_MAP_PATH = "./modules/characters/npc_map.json"
     with open(NPC_MAP_PATH) as f:
         npc_map = json.load(f)
-
     module_names = npc_map[npc_name]["modules"]
     speaker = npc_map[npc_name]["speaker"]
 
@@ -134,7 +114,7 @@ def newPlayerMessageRepeated(failed_prompts, player_msg):
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
     #tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
-    winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
+    #winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
 
     # Printing the prompt for debugging purposes
     if debug:
