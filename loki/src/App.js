@@ -7,7 +7,8 @@ import { useState } from 'react';
 
 export default function App() {
 
-  const [sessionDetails, setSessionDetails] = useState({});
+  const [sessionDetails, setSessionDetails] = useState(null);
+
 
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
@@ -17,11 +18,11 @@ export default function App() {
             <FaceView />
           </Grid>
           <Grid item xs={1}>
-            <SessionCreator sessionDetails={sessionDetails} setSessionDetails={setSessionDetails} />
+            <SessionCreator sessionDetails={sessionDetails} setSessionDetails={setSessionDetails}/>
           </Grid>
         </Grid>
         <Grid item xs={1}>
-          <ChatWindow sessionDetails={sessionDetails} />
+          <ChatWindow sessionDetails={sessionDetails}  setSessionDetails={setSessionDetails}/>
         </Grid>
       </Grid>
     </Box>

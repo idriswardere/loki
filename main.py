@@ -8,8 +8,10 @@ from core.details import Pinecone
 import winsound
 import json
 from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 
 max_failed_prompts = 1
 SPEECH_OUTPUT_PATH = "./speech.wav"
@@ -134,7 +136,7 @@ def newPlayerMessageRepeated(failed_prompts, player_msg):
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
     #tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
-    winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
+    #winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
 
     # Printing the prompt for debugging purposes
     if debug:
