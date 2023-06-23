@@ -67,7 +67,7 @@ export default function SessionCreator(props) {
                                             label="NPC"
                                             onChange={(e) => setLocalSessionDetails({ ...localSessionDetails, name: e.target.value })}
                                         >
-                                            {Object.keys(npcOptions).map((key) => <MenuItem key={key} value={npcOptions[key].name}>{npcOptions[key].name}</MenuItem>)}
+                                            {Object.keys(npcOptions).map((key) => <MenuItem key={key} value={npcOptions[key].key}>{npcOptions[key].name}</MenuItem>)}
                                         </Select>
                                     </FormControl>
                                 </Box>

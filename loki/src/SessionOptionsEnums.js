@@ -8,8 +8,8 @@ export const llmOptions = {
 }
 
 export const npcOptions = {
-    SHU: { "name": "Shu", "pic": ShuPic },
-    Matthew: { "name": "Matthew", "pic": MatthewPic },
-    ShahZaib: { "name": "ShahZaib", "pic": ShahZaibPic },
-    Lizzie: { "name": "Lizzie", "pic": LizziePic },
+    SHU: { "name": "Shu", "key": "Shu", "pic": ShuPic },
+    Matthew: { "name": "Matthew", "key": "Matthew", "pic": MatthewPic },
+    ShahZaib: { "name": "Shah Zaib", "key": "ShahZaib", "pic": ShahZaibPic },
+    Lizzie: { "name": "Lizzie", "key": "Lizzie", "pic": LizziePic },
 }
