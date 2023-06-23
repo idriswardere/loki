@@ -1,4 +1,4 @@
-import ShuPic from "./npcImages/Shu.png";
+import ShuPic from "./npcImages/Shu.jpg";
 import MatthewPic from "./npcImages/Matthew.png";
 import ShahZaibPic from "./npcImages/ShahZaib.jpg";
 import LizziePic from "./npcImages/Lizzie.jpg";
