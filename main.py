@@ -42,7 +42,7 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     modules = load_modules()
 
     # Initializing relevant details
-    details = Pinecone("Shu")#Pinecone(npc_name)
+    details = Pinecone("Shu")#Pinecone(npc_name) # TODO: Replace
     relevant_details_list = details.query(player_msg, k=k)
     relevant_details = "\n".join(relevant_details_list)
     modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
