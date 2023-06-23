@@ -16,7 +16,6 @@ cors = CORS(app)
 max_failed_prompts = 1
 SPEECH_OUTPUT_PATH = "./speech.wav"
 
-modules = load_modules()
 load_dotenv()
 
 @app.route("/initialize/<new_llm>/<new_npc_name>/<new_k>/<player_desc>/<player_msg>")
@@ -30,6 +29,7 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     global prompt
     global npc_name
     global k
+    global modules
     global tts
 
     new_k = int(new_k)
@@ -39,6 +39,7 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
 
     llms_dict = {"GPT3" : GPT3}
     llm = llms_dict[new_llm]()
+    modules = load_modules()
 
     # Initializing relevant details
     details = Pinecone(npc_name)
