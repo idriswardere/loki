@@ -83,12 +83,12 @@ export default function ChatWindow(props) {
                     <Box sx={{ height: "150px", width: "100%", position: "relative" }}>
                         <Box sx={{ mt: 1, height: "70%", aspectRatio: 1, position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
                             <Avatar
-                                alt={sessionDetails.name}
+                                alt={npcOptions[Object.keys(npcOptions).find((key) => npcOptions[key].key === sessionDetails.name)]?.name}
                                 sx={{ height: "100%", width: "100%" }}
-                                src={npcOptions[Object.keys(npcOptions).find((key) => npcOptions[key].name === sessionDetails.name)]?.pic}
+                                src={npcOptions[Object.keys(npcOptions).find((key) => npcOptions[key].key === sessionDetails.name)]?.pic}
                             />
-                            <Typography sx={{ mt: 1 }} variant="h5" textAlign="center">
-                                {sessionDetails.name}
+                            <Typography sx={{ mt: 1, width: "500%", position: "absolute", left: "50%", transform: "translateX(-50%)" }} variant="h5" textAlign="center">
+                                {npcOptions[Object.keys(npcOptions).find((key) => npcOptions[key].key === sessionDetails.name)]?.name}
                             </Typography>
                         </Box>
                     </Box>
