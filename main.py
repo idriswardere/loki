@@ -8,8 +8,10 @@ from core.details import Pinecone
 import winsound
 import json
 from flask import Flask
+from flask_cors import CORS
 
 app = Flask(__name__)
+cors = CORS(app)
 
 max_failed_prompts = 1
 SPEECH_OUTPUT_PATH = "./speech.wav"
