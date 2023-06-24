@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 # Create modules dict containing text from the modules directory
-def load_modules(root="modules"):
+def load_modules(root="modules") -> dict:
     modules = dict()
     files = os.listdir(root)
 
@@ -23,7 +23,7 @@ def load_modules(root="modules"):
     return modules
 
 
-def parse_reply_reflection(response_str, debug=False):
+def parse_reply_reflection(response_str: str, debug=False) -> tuple[str, str]:
     reply_start_tag, reply_end_tag = "<r>", "</r>"
     reply_start_idx = response_str.find(reply_start_tag)
     reply_end_idx = response_str.find(reply_end_tag)
@@ -45,7 +45,7 @@ def parse_reply_reflection(response_str, debug=False):
         print("-------------------------------------")
     return None, None
 
-def create_prompt(modules, module_names):
+def create_prompt(modules: dict, module_names: list[str]) -> str:
     module_splits = [name.split("/") for name in module_names]
     for i, split in enumerate(module_splits):
         module = modules
@@ -56,8 +56,12 @@ def create_prompt(modules, module_names):
     prompt = "\n\n".join(module_splits)
     return prompt
 
-def prepare_for_tts(text): # attempts to trim quotations that sometimes appear
+def prepare_for_tts(text: str) -> str: # attempts to trim quotations that sometimes appear
     if not text[0].isalpha():
         return text[1:-1]
     else:
         return text
+    
+def sanitize(input_str: str) -> str:
+    sanitized_str = input_str.strip()
+    return sanitized_str

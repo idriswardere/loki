@@ -1,10 +1,10 @@
 # Importing appropriate libraries
 debug = True
 from dotenv import load_dotenv
-from core.utils import load_modules, create_prompt, prepare_for_tts
+from core.utils import load_modules, create_prompt, prepare_for_tts, sanitize
 from core.llms import GPT3
 from core.details import Pinecone
-from TTS.api import TTS
+#from TTS.api import TTS
 import winsound
 import json
 from flask import Flask
@@ -31,6 +31,10 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     global k
     global modules
     global tts
+
+    # Sanitizing inputs
+    player_msg = sanitize(player_msg)
+    player_desc = sanitize(player_desc)
 
     new_k = int(new_k)
 
@@ -64,8 +68,8 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     prompt = create_prompt(modules, module_names)
 
     # Initializing Coqui Studio TTS
-    tts_model_name = f"coqui_studio/en/{speaker}/coqui_studio"
-    tts = TTS(model_name=tts_model_name)
+    #tts_model_name = f"coqui_studio/en/{speaker}/coqui_studio"
+    #tts = TTS(model_name=tts_model_name)
 
     reply, reflection = llm.get_response(prompt)
     if not reply or not reflection: # if prompt fails, allow retry until we retry a certain amount of times
@@ -76,8 +80,8 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
     # Initial TTS
-    tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
-    winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME)
+    #tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
+    #winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME)
 
     return reply
     
@@ -100,6 +104,9 @@ def newPlayerMessageRepeated(failed_prompts, player_msg):
     # print("-----REPLY-----")
     # print(reply + "\n")
 
+    # Sanitizing player_msg
+    player_msg = sanitize(player_msg)
+
     # Updating prompt list with new current interaction
     modules['current_interaction'] += f"""\nThe player responded: “{player_msg}”"""
 
@@ -121,8 +128,8 @@ def newPlayerMessageRepeated(failed_prompts, player_msg):
         newPlayerMessageRepeated(failed_prompts, prompt)
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
-    tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
-    winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
+    #tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
+    #winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
 
     # Printing the prompt for debugging purposes
     if debug:
