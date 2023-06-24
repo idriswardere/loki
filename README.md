@@ -10,7 +10,7 @@ npm install
 
 Be sure to also install the appropriate Python packages in your environment.
 
-This demo uses API calls to operate. Create a file called `.env` in the main directory filled in with the appropriate API keys. Follow this format:
+Depending on your session configuration, this demo may use API calls to operate. Create a file called `.env` in the main directory filled in with the appropriate API keys. Follow this format:
 ```
 OPENAI_API_KEY=<INSERT KEY HERE>
 PINECONE_API_KEY=<INSERT KEY HERE>
