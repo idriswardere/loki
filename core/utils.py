@@ -63,5 +63,8 @@ def prepare_for_tts(text: str) -> str: # attempts to trim quotations that someti
         return text
     
 def sanitize(input_str: str) -> str:
-    sanitized_str = input_str.strip()
-    return sanitized_str
+    input_str = input_str.strip()
+    remove_list = ["\n", "\t", "\r"]
+    for r in remove_list:
+        input_str = input_str.replace(r, "")
+    return input_str
