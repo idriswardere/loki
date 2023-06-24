@@ -1,13 +1,14 @@
 import os
-from dotenv import load_dotenv
 
-# Create modules dict containing text from the modules directory
+# Create modules dict containing text from the modules directory (recursive)
 def load_modules(root="modules") -> dict:
     modules = dict()
     files = os.listdir(root)
 
-    # processing .txt files
     txt_file_names = [file for file in files if file.endswith(".txt")]
+    folder_names = [file for file in files if "." not in file]
+    
+    # processing .txt files
     for txt_file_name in txt_file_names: # defining module key/value pairs for each file
         path = os.path.join(root, txt_file_name)
         module_name = txt_file_name[:-4] # removing .txt
@@ -15,7 +16,6 @@ def load_modules(root="modules") -> dict:
             modules[module_name] = txt_file.read()
 
     # processing folders recursively
-    folder_names = [file for file in files if "." not in file]
     for folder_name in folder_names:
         next_root = os.path.join(root, folder_name)
         modules[folder_name] = load_modules(root=next_root)
