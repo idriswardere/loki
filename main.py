@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from core.utils import load_modules, create_prompt, prepare_for_tts
 from core.llms import GPT3
 from core.details import Pinecone
-#from TTS.api import TTS
+from TTS.api import TTS
 import winsound
 import json
 from flask import Flask
@@ -65,7 +65,8 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
 
     # Initializing Coqui Studio TTS
     tts_model_name = f"coqui_studio/en/{speaker}/coqui_studio"
-    #tts = TTS(model_name=tts_model_name)
+    tts = TTS(model_name=tts_model_name)
+
     reply, reflection = llm.get_response(prompt)
     if not reply or not reflection: # if prompt fails, allow retry until we retry a certain amount of times
         failed_prompts += 1
@@ -73,6 +74,10 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
             return "Failed"
         newPlayerMessageRepeated(failed_prompts, prompt)
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
+
+    # Initial TTS
+    tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
+    winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME)
 
     return reply
     
@@ -116,8 +121,8 @@ def newPlayerMessageRepeated(failed_prompts, player_msg):
         newPlayerMessageRepeated(failed_prompts, prompt)
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
-    #tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
-    #winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
+    tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
+    winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
 
     # Printing the prompt for debugging purposes
     if debug:
