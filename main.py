@@ -74,7 +74,6 @@ async def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     #details = Pinecone("Shu")#Pinecone(npc_name)
     #relevant_details_list = details.query(player_msg, k=k)
     relevant_details = ""#"\n".join(relevant_details_list)
-    modules['relevant_details'] = ""#modules['relevant_details_template'].format(relevant_details=relevant_details)
 
     # Defining response prompt (with reflection)
     prompt = create_prompt(modules, module_names)
@@ -102,9 +101,8 @@ async def newPlayerMessageRepeated(failed_prompts, player_msg):
     modules['current_interaction'] += f"\nThe player responded: “{player_msg}”"
 
     # Updating relevant details
-    #relevant_details_list = details.query(player_msg, k=k)
-    #relevant_details = "\n".join(relevant_details_list)
-    modules['relevant_details'] = "";#modules['relevant_details_template'].format(relevant_details=relevant_details)
+    # relevant_details_list = details.query(player_msg, k=k)
+    relevant_details = ""#"\n".join(relevant_details_list)
 
     # Constructing the prompt and replacing tags
     prompt = create_prompt(modules, module_names).format(npc_name=npc_name,
