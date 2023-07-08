@@ -68,7 +68,6 @@ export default function ChatWindow(props) {
         setRecievingResponse(false);
         messages.unshift({ sender: "npc", message: data.reply });
         setMessages([...messages]);
-        console.log(data.audio["audio_url"]);
         const audio = new Audio(data.audio["audio_url"]);
         audio.play();
     }

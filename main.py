@@ -22,7 +22,6 @@ SPEECH_OUTPUT_PATH = "./speech.wav"
 load_dotenv()
 
 def messageToAudio(message):
-    print(message)
     url = "https://app.coqui.ai/api/v2/samples/from-prompt/"
     payload = {
         "emotion": "Neutral",
