@@ -21,13 +21,13 @@ SPEECH_OUTPUT_PATH = "./speech.wav"
 
 load_dotenv()
 
-def messageToAudio(message):
+def messageToAudio(message, speaker):
     url = "https://app.coqui.ai/api/v2/samples/from-prompt/"
     payload = {
         "emotion": "Neutral",
         "speed": 1,
         "text": message[1: len(message) - 1],
-        "prompt": "A male human necromancer who is grizzled and vengeful"
+        "prompt": speaker
     }
     headers = {
         "accept": "application/json",
@@ -42,6 +42,7 @@ async def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     global details
     global relevant_details_list
     global relevant_details
+    global speaker
     global module_names
     global prompt
     global npc_name
@@ -72,7 +73,7 @@ async def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     # Initializing relevant details
     #details = Pinecone("Shu")#Pinecone(npc_name)
     #relevant_details_list = details.query(player_msg, k=k)
-    #relevant_details = "\n".join(relevant_details_list)
+    relevant_details = ""#"\n".join(relevant_details_list)
     modules['relevant_details'] = ""#modules['relevant_details_template'].format(relevant_details=relevant_details)
 
     # Defining response prompt (with reflection)
@@ -86,7 +87,7 @@ async def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
         newPlayerMessageRepeated(failed_prompts, prompt)
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
-    return "{\"reply\": \"" + reply[1: len(reply) - 1] +"\", \"audio\": " + messageToAudio(reply).text + "}"
+    return "{\"reply\": \"" + reply[1: len(reply) - 1] +"\", \"audio\": " + messageToAudio(reply, speaker).text + "}"
     
 
 @app.route("/newMessage/<player_msg>")
@@ -138,4 +139,4 @@ async def newPlayerMessageRepeated(failed_prompts, player_msg):
         print('--PROMPT--')
         print(prompt + "\n")
 
-    return "{\"reply\": \"" + reply[1: len(reply) - 1] +"\", \"audio\": " + messageToAudio(reply).text + "}"
+    return "{\"reply\": \"" + reply[1: len(reply) - 1] +"\", \"audio\": " + messageToAudio(reply, speaker).text + "}"

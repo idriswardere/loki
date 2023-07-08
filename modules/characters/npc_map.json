@@ -1,6 +1,6 @@
 {
     "Shu": {
         "modules": ["global", "relevant_details", "characters/Shu", "player", "current_interaction", "task"],
-        "speaker": "Abrahan Mack"
+        "speaker": "A male human necromancer who is grizzled and vengeful"
     }
 }
