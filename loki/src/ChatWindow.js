@@ -62,12 +62,15 @@ export default function ChatWindow(props) {
         }).catch((e) => console.error(e));
     }
 
-    const handleMessage = (message) => {
+    const handleMessage = (data) => {
         setRecievingMessage(false);
         clearTimeout(recievingResponseTimer.current);
         setRecievingResponse(false);
-        messages.unshift({ sender: "npc", message: message });
+        messages.unshift({ sender: "npc", message: data.reply });
         setMessages([...messages]);
+        console.log(data.audio["audio_url"]);
+        const audio = new Audio(data.audio["audio_url"]);
+        audio.play();
     }
 
     if (!sessionDetails) {

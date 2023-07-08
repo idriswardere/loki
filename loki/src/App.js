@@ -9,7 +9,6 @@ export default function App() {
 
   const [sessionDetails, setSessionDetails] = useState(null);
 
-
   return (
     <Box sx={{ height: "100vh", width: "100vw" }}>
       <Grid container columns={2} direction="row" wrap='nowrap' sx={{ height: "100%", width: "100%" }}>

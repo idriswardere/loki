@@ -1,12 +1,13 @@
 # Importing appropriate libraries
 debug = True
 from dotenv import load_dotenv
-from core.utils import load_modules, create_prompt, prepare_for_tts
+from core.utils import load_modules, create_prompt
 from core.llms import GPT3
 from core.details import Pinecone
 #from TTS.api import TTS
-import winsound
 import json
+import requests
+import os
 from flask import Flask
 from flask_cors import CORS
 
@@ -18,8 +19,24 @@ SPEECH_OUTPUT_PATH = "./speech.wav"
 
 load_dotenv()
 
+def messageToAudio(message):
+    print(message)
+    url = "https://app.coqui.ai/api/v2/samples/from-prompt/"
+    payload = {
+        "emotion": "Neutral",
+        "speed": 1,
+        "text": message[1: len(message) - 1],
+        "prompt": "A male human necromancer who is grizzled and vengeful"
+    }
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        "authorization": "Bearer " + os.getenv("COQUI_STUDIO_TOKEN")
+    }
+    return requests.post(url, json=payload, headers=headers)
+
 @app.route("/initialize/<new_llm>/<new_npc_name>/<new_k>/<player_desc>/<player_msg>")
-def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
+async def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     global llm
     global details
     global relevant_details_list
@@ -30,7 +47,6 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     global npc_name
     global k
     global modules
-    global tts
 
     new_k = int(new_k)
 
@@ -42,10 +58,10 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     modules = load_modules()
 
     # Initializing relevant details
-    details = Pinecone("Shu")#Pinecone(npc_name)
-    relevant_details_list = details.query(player_msg, k=k)
-    relevant_details = "\n".join(relevant_details_list)
-    modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
+    #details = Pinecone("Shu")#Pinecone(npc_name)
+    #relevant_details_list = details.query(player_msg, k=k)
+    #relevant_details = "\n".join(relevant_details_list)
+    modules['relevant_details'] = ""#modules['relevant_details_template'].format(relevant_details=relevant_details)
 
     # Initializing prompt parts
     modules['player'] = modules['player'].format(player_desc=player_desc)
@@ -63,9 +79,6 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     # Defining response prompt (with reflection)
     prompt = create_prompt(modules, module_names)
 
-    # Initializing Coqui Studio TTS
-    tts_model_name = f"coqui_studio/en/{speaker}/coqui_studio"
-    #tts = TTS(model_name=tts_model_name)
     reply, reflection = llm.get_response(prompt)
     if not reply or not reflection: # if prompt fails, allow retry until we retry a certain amount of times
         failed_prompts += 1
@@ -74,14 +87,14 @@ def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
         newPlayerMessageRepeated(failed_prompts, prompt)
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
-    return reply
+    return "{\"reply\": \"" + reply[1: len(reply) - 1] +"\", \"audio\": " + messageToAudio(reply).text + "}"
     
 
 @app.route("/newMessage/<player_msg>")
-def newPlayerMessage(player_msg):
-    return newPlayerMessageRepeated(0, player_msg)
+async def newPlayerMessage(player_msg):
+    return await newPlayerMessageRepeated(0, player_msg)
 
-def newPlayerMessageRepeated(failed_prompts, player_msg):
+async def newPlayerMessageRepeated(failed_prompts, player_msg):
     # Get response from prompt and extract reply/reflections from it
     # print("Loading response...", end='\r')
 
@@ -99,9 +112,9 @@ def newPlayerMessageRepeated(failed_prompts, player_msg):
     modules['current_interaction'] += f"""\nThe player responded: “{player_msg}”"""
 
     # Updating relevant details
-    relevant_details_list = details.query(player_msg, k=k)
-    relevant_details = "\n".join(relevant_details_list)
-    modules['relevant_details'] = modules['relevant_details_template'].format(relevant_details=relevant_details)
+    #relevant_details_list = details.query(player_msg, k=k)
+    #relevant_details = "\n".join(relevant_details_list)
+    modules['relevant_details'] = "";#modules['relevant_details_template'].format(relevant_details=relevant_details)
 
     modules['task'] = original_task.format(npc_name=npc_name, player_msg=player_msg)
 
@@ -116,12 +129,9 @@ def newPlayerMessageRepeated(failed_prompts, player_msg):
         newPlayerMessageRepeated(failed_prompts, prompt)
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
-    #tts.tts_to_file(text=prepare_for_tts(reply), file_path=SPEECH_OUTPUT_PATH)
-    #winsound.PlaySound(SPEECH_OUTPUT_PATH, winsound.SND_FILENAME) # TODO: replace winsound with a better audio library
-
     # Printing the prompt for debugging purposes
     if debug:
         print('--PROMPT--')
         print(prompt + "\n")
 
-    return reply
+    return "{\"reply\": \"" + reply[1: len(reply) - 1] +"\", \"audio\": " + messageToAudio(reply).text + "}"
