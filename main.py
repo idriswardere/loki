@@ -1,6 +1,6 @@
 # Importing appropriate libraries
 from dotenv import load_dotenv
-from core.utils import load_modules, create_prompt, sanitize
+from core.utils import load_modules, create_prompt, sanitize, prepare_for_tts
 from core.llms import GPT3
 from core.details import Pinecone
 #from TTS.api import TTS
@@ -40,8 +40,6 @@ def messageToAudio(message, speaker):
 async def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     global llm
     global details
-    global relevant_details_list
-    global relevant_details
     global speaker
     global module_names
     global prompt
@@ -76,7 +74,11 @@ async def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     relevant_details = "\n".join(relevant_details_list)
 
     # Defining response prompt (with reflection)
-    prompt = create_prompt(modules, module_names)
+    prompt = create_prompt(modules, module_names).format(npc_name=npc_name,
+                                                         player_msg=player_msg,
+                                                         player_desc=player_desc_global,
+                                                         relevant_details=relevant_details
+                                                         )
 
     reply, reflection = llm.get_response(prompt)
     if not reply or not reflection: # if prompt fails, allow retry until we retry a certain amount of times
@@ -86,7 +88,22 @@ async def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
         newPlayerMessageRepeated(failed_prompts, prompt)
     modules['current_interaction'] += f"""\n{npc_name} responded: {reply}"""
 
-    return "{\"reply\": \"" + reply[1: len(reply) - 1] +"\", \"audio\": " + messageToAudio(reply, speaker).text + "}"
+    # Printing the prompt for debugging purposes
+    if debug:
+        print("Loading response...", end='\r')
+        print("-----------------------------")
+        print("--RELEVANT DETAILS--")
+        print(relevant_details + "\n")
+        print("--REFLECTIONS--")
+        print(reflection)
+        print("--CURRENT INTERACTION--")
+        print(modules['current_interaction'] + "\n")
+        print("-----REPLY-----")
+        print(reply + "\n")
+        print('--PROMPT--')
+        print(prompt + "\n")
+
+    return "{\"reply\": \"" + prepare_for_tts(reply) +"\", \"audio\": " + messageToAudio(reply, speaker).text + "}"
     
 
 @app.route("/newMessage/<player_msg>")
@@ -119,7 +136,7 @@ async def newPlayerMessageRepeated(failed_prompts, player_msg):
             print("-----FAILED PROMPT-----")
         if failed_prompts >= max_failed_prompts:
             return "Failed"
-        newPlayerMessageRepeated(failed_prompts, prompt)
+        return await newPlayerMessageRepeated(failed_prompts, prompt)
     modules['current_interaction'] += f"\n{npc_name} responded: {reply}"
 
     # Printing the prompt for debugging purposes
@@ -137,4 +154,4 @@ async def newPlayerMessageRepeated(failed_prompts, player_msg):
         print('--PROMPT--')
         print(prompt + "\n")
 
-    return "{\"reply\": \"" + reply[1: len(reply) - 1] +"\", \"audio\": " + messageToAudio(reply, speaker).text + "}"
+    return "{\"reply\": \"" + prepare_for_tts(reply) +"\", \"audio\": " + messageToAudio(reply, speaker).text + "}"
