@@ -28,17 +28,17 @@ bash start.sh
 
 Characters have their information defined in two files. To add a character to the demo, you will need to modify them both. If you want to add more information for a character to work with, you may need to create `.txt` files in the `modules` directory.
 
-To define a character's information, navigate to `modules/characters/npc_map.json`. In this file, you can define new characters by a _key_ that will be used to refer to the character in the other file. A character has the properties _modules_ and _speaker_. The _modules_ property dictates which `.txt` files from the `modules` directory will be used to construct the prompt. The _speaker_ property is the TTS speaker used from your Coqui Studio. Note that "current_interaction" is a special module that is updated throughout the conversation to hold its history. Here is a basic version of `npc_map.json`:
+To define a character's information, navigate to `modules/characters/npc_map.json`. In this file, you can define new characters by a _key_ that will be used to refer to the character in the other file. A character has the properties _modules_ and _speaker_. The _modules_ property dictates which `.txt` files from the `modules` directory will be used to construct the prompt. The _speaker_ property is a description of your speaker that will be turned into a voice in Coqui Studio. Note that "current_interaction" is a special module that is updated throughout the conversation to hold its history. Here is a basic version of `npc_map.json`:
 
 ```json
 {
     "Shu": {
         "modules": ["global", "relevant_details", "characters/Shu", "player", "current_interaction", "task"],
-        "speaker": "Abrahan Mack"
+        "speaker": "A male human necromancer who is grizzled and vengeful."
     },
     "ExChar": {
         "modules": ["global", "relevant_details", "player", "current_interaction", "task"],
-        "speaker": "Example Speaker"
+        "speaker": "An example description."
     },
 }
 ```
