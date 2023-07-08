@@ -2,17 +2,5 @@
     "Shu": {
         "modules": ["global", "relevant_details", "characters/Shu", "player", "current_interaction", "task"],
         "speaker": "Abrahan Mack"
-    },
-    "Matthew": {
-        "modules": ["relevant_details", "characters/Matthew", "player", "current_interaction", "task"],
-        "speaker": "Abrahan Mack"
-    },
-    "Lizzie": {
-        "modules": ["relevant_details", "characters/Lizzie", "player", "current_interaction", "task"],
-        "speaker": "Abrahan Mack"
-    },
-    "ShahZaib": {
-        "modules": ["relevant_details", "characters/ShahZaib", "player", "current_interaction", "task"],
-        "speaker": "Abrahan Mack"
     }
 }
