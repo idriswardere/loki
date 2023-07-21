@@ -1,6 +1,6 @@
-import openai
 import os
 from core.utils import parse_reply_reflection
+import openai
 
 # Interface between LLM and character response generation
 class LLM():
