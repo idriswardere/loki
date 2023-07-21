@@ -2,13 +2,16 @@
 
 ## Setup
 
-This project uses [Node.js](https://nodejs.org/en/download) and Python. To install the necessary packages for Node, run the following commands:
+This project uses [Node.js](https://nodejs.org/en/download) and Python. To install the necessary packages for Node, run the following commands from the project directory:
 ```
 cd loki
 npm install
 ```
 
-Be sure to also install the appropriate Python packages in your environment.
+Be sure to also install the appropriate Python packages in your environment. To do this, run the following command in the project directory:
+```
+pip install -r requirements.txt
+```
 
 Depending on your session configuration, this demo may use API calls to operate. Create a file called `.env` in the main directory filled in with the appropriate API keys. Follow this format:
 ```
