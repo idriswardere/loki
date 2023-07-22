@@ -1,6 +1,8 @@
 import os
 import openai
 import pinecone
+from milvus import default_server
+from pymilvus import connections
 
 class Details():
 
@@ -35,3 +37,12 @@ class Pinecone(Details):
         )
 
         return [query_response['matches'][i]['id'] for i in range(len(query_response['matches']))]
+    
+    class Milvus(Details):
+        
+        def __init__(self, npc_name):
+            self.npc_name = npc_name
+            connections.connect(host='127.0.0.1', port=default_server.listen_port)
+
+        def query(self, player_msg, k=3) -> list[str]:
+            pass
