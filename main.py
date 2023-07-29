@@ -4,7 +4,7 @@ import os
 import requests
 from core.utils import load_modules, create_prompt, sanitize, prepare_for_tts
 from core.llms import GPT3
-from core.details import Pinecone
+from core.details import Pinecone, LokiVDB
 from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
@@ -68,7 +68,7 @@ async def main(new_llm, new_npc_name, new_k, player_desc, player_msg):
     modules = load_modules()
 
     # Initializing relevant details
-    details = Pinecone(npc_name)
+    details = LokiVDB(npc_name)
     relevant_details_list = details.query(player_msg, k=k)
     relevant_details = "\n".join(relevant_details_list)
 
