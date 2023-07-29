@@ -16,7 +16,6 @@ pip install -r requirements.txt
 Depending on your session configuration, this demo may use API calls to operate. Create a file called `.env` in the main directory filled in with the appropriate API keys. Follow this format:
 ```
 OPENAI_API_KEY=<INSERT KEY HERE>
-PINECONE_API_KEY=<INSERT KEY HERE>
 COQUI_STUDIO_TOKEN=<INSERT KEY HERE>
 ```
 
