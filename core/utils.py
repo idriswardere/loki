@@ -1,4 +1,7 @@
 import os
+import openai
+
+EMBEDDING_MODEL = 'text-embedding-ada-002'
 
 # Create modules dict containing text from the modules directory (recursive)
 def load_modules(root="modules") -> dict:
@@ -68,3 +71,7 @@ def sanitize(input_str: str) -> str:
     for r in remove_list:
         input_str = input_str.replace(r, "")
     return input_str
+
+def get_embedding(text: str) -> list[float]:
+    embedding = openai.Embedding.create(input=[text], model=EMBEDDING_MODEL)['data'][0]['embedding']
+    return embedding
