@@ -66,4 +66,9 @@ Here is a description of the player:
 
 {player_desc}
 ```
-
+The details of a module can be written in a `.txt` file named the module name with `_details` appended to the end. For example, the Valterre module `Valterre.txt` contains information about the Valterre, and `Valterre_details.txt` contains the details about Valterre used within the vector database. This naming convention is important since it is expected in order to appropriately populate the database during session initialization. Note that details are not required for every module. A details file should have units of information separated by newline characters. Here is an example of a miniature details file: 
+```
+Valterre has mountains, lakes, waterfalls, rainforests, and wetlands.
+Valterre’s main export is magical items.
+Valterre houses the largest military in Talis.
+```
