@@ -4,7 +4,7 @@ import os
 import requests
 from core.utils import load_modules, create_prompt, sanitize, prepare_for_tts
 from core.llms import GPT3
-from core.details import Pinecone, LokiVDB
+from core.details import LokiVDB
 from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS

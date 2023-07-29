@@ -1,6 +1,5 @@
 import os
 import json
-import openai
 import pinecone
 import numpy as np
 from numpy.linalg import norm
@@ -41,7 +40,6 @@ class LokiVDB:
     def __init__(self, npc_name):
         # initializing vars
         self.vector_dict = {} # detail: embedding 
-        openai.api_key = os.getenv("OPENAI_API_KEY")
 
         # getting paths for each details file from the character module list
         NPC_MAP_PATH = "./modules/characters/npc_map.json"
