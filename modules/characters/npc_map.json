@@ -2,5 +2,9 @@
     "Shu": {
         "modules": ["global", "relevant_details", "Valterre", "characters/Shu", "player", "current_interaction", "task"],
         "speaker": "A male human necromancer who is grizzled and vengeful"
+    },
+    "Attacca": {
+        "modules": ["global", "relevant_details", "Dadelos", "Talis", "Pneuma", "Forgery", "Relics", "characters/Attacca", "player", "current_interaction", "task"],
+        "speaker": "A robotic woman's voice"
     }
 }
