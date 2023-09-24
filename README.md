@@ -40,17 +40,25 @@ An issue that may pop up for games with very in-depth lore and information sets 
 
 While we’re hopeful that generative models are used in the near future for game NPCs, we suspect that some of these issues will take time to be appropriately addressed. We’re excited to see the progression of generative models being used within game development over the next few years.
 
-## Implementation
-
-This project was done using Python and React. We leveraged OpenAI’s API to make calls to the `gpt-3.5-turbo` model. We also used the OpenAI embedder to create the embeddings for the details vector database. For text-to-speech, we used Coqui Studio API since we found their voices to be among the most realistic while also being very affordable for demonstration. We created our own lightweight vector database as an alternative to using an existing software since our demo is at a small scale. We used React and Flask to make a page to interact with the application.
-
 ## Demo
 
 Here's a picture demonstrating Loki:
 
 <img src="lokiattacademo.png" width=1600 />
 
-This is a session created with the character called Attacca. For some context, the Attacca character module is shown below.
+Transcription:
+```
+Player description: 'A human prisoner in Catena.'
+
+Player: "Hello there. What is your name?"
+Attacca: "I am Attacca, a homunculi created to serve as a guard in Catena. I am not permitted to reveal my identity to you, prisoner, but I can assure you that I will be vigilant in my duties."
+Player: "Can you tell me about yourself?"
+Attacca: "I am not permitted to share my thoughts and feelings with you, prisoner, but I can tell you that I am a homunculi created to serve as a guard in Catena. I am bound by the rules of Catena and cannot leave without permission from my master. I take pride in my work and I am vigilant in my duties."
+Player: "I have never been outside the prison. What is Dadelos like?"
+Attacca: "Dadelos is a city of many layers, with an Upper City that is luxurious and houses a diverse group of inventors, and an Under City that is dirty and has poor living conditions. It is the third wealthiest nation in Talis, and the smallest but most technologically advanced country in Talis. It utilizes steam-powered lifts to navigate the very tall and very layered geography, and people in Dadelos wear light and flowing robes often made of linen. It gets incredibly hot during the summer, and has an Upper City where many Forgers and intellectuals live, and an Under City, where homunculi and unskilled workers live. Lastly, it has one prison called Catena."
+```
+
+This is a session created with the character called Attacca. The player is described as 'a human prisoner in Catena'. For some context, the Attacca character module is shown below.
 
 ```
 Play the role of Attacca, a homunculi created to guard Dadelos’ only prison, Catena. Most homunculi are not capable of original thought or emotion.
@@ -94,7 +102,7 @@ Let's take a look at the reflections that were made by Attaca after the player's
 10. Attacca regards Theor as her master and god.
 ```
 
-These reflections give us an idea of what is informing Attacca's response in this interaction. While some didn't end up being relevant, there were some solid insights that likely helped improve the response. Our current approach doesn't keep any memory of previous reflections, but this is something that could be explored in the future.
+These reflections give us an idea of what is informing Attacca's response in this interaction. While some didn't end up being relevant, there were some solid insights that likely helped improve the response. In these, the third and fourth reflections are particularly great to see because they promote a response that takes the relationship between Attacca and the player into account. Our current approach doesn't keep any memory of previous reflections, but this is something that could be explored in the future.
 
 The last question that the player asked Attacca was about the region Dadelos. Attacca is from Dadelos, but like we mentioned earlier, this information is in separate modules. Critical knowledge about the region are in the core Dadelos module, but the finer details are within the Dadelos details module. Recall that details modules are not always present in the active knowledge base like core modules, and instead, they're separated into small chunks of information that are pulled from a vector database. Let's take a look at the top 10 relevant details that were pulled after Attacca was asked about Dadelos ("I have never been outside the prison. What is Dadelos like?"). Note that these are ranked in order of relevance from top to bottom.
 
@@ -174,6 +182,10 @@ The constructed prompt for Attacca's final message to the player is shown below 
     
     Using all of these insights along with the available information, write Attacca’s next response to the player's most recent message ("I have never been outside the prison. What is Dadelos like"). Avoid asking any questions in this response. The response length should be a few sentences or less. There will only be one response and it will be located after all of the insights. Do not repeat previous responses. Attacca can only interact with the player verbally, so the response cannot involve offering or receiving anything from the player other than verbal help. The response also cannot ask the player to do anything. (example with format: <r>”Response goes here.”</r>)
 </details>
+
+## Implementation
+
+This project was done using Python and React. We leveraged OpenAI’s API to make calls to the `gpt-3.5-turbo` model. We also used the OpenAI embedder to create the embeddings for the details vector database. For text-to-speech, we used Coqui Studio API since we found their voices to be among the most realistic while also being very affordable for demonstration. We created our own lightweight vector database as an alternative to using an existing software since our demo is at a small scale. We used React and Flask to make a page to interact with the application.
 
 # World
 
