@@ -26,7 +26,7 @@ One of the issues you’ll run into when trying to create a prompt for a complex
 
 While information in the core module is always included in the prompt, details are not. To help save space in the context window, we only pull the most relevant details across all of the available details modules into the prompt. We are able to find out what’s the most relevant by leveraging the user’s query and utilizing vector databases. The way it works is by creating semantically meaningful embeddings for each of the details across all of the modules along with creating an embedding for the user’s message to the character. These are typically created using machine learning models, and their outputs are designed to have pairs of texts which are relevant to each other have higher similarity values than pairs of text which are not related. Then we can get similarity values between the user’s query and each of the details that’s available to the character and only choose the details with the highest values since they are the most relevant.
 
-To illustrate how this works, we will use an example. Let’s assume the player asks a character who has access to the ‘Forgery’ module the following question: “What proportion of people are Forgers?” The detail with the highest similarity score to the player’s question would likely be “Forgers make up five percent of the total population ”, while a detail like “The universal symbol for forgers is a hand wrapped around a staff that is shaped like a tree” may be among the least relevant.
+To illustrate how this works, we will use an example. Let’s assume the player asks a character who has access to the ‘Forgery’ module the following question: “What proportion of people are Forgers?” The detail with the highest similarity score to the player’s question would likely be “Forgers make up five percent of the total population ”, while a detail like “The universal symbol for Forgers is a hand wrapped around a staff that is shaped like a tree” may be among the least relevant.
 
 ## Creating Immersion
 
@@ -189,7 +189,7 @@ This project was done using Python and React. We leveraged OpenAI’s API to mak
 
 # World
 
-The world that these generative agents are based in is called Talis. Talis is as adjacent to Earth as possible, in the sense that there is a heaven and hell that are physically above and below Talis. Talis has seven main regions, and all NPCs within the project hail from one of these seven regions. Along with each region comes its own unique government, culture, economy, and more. 
+The world that these generative agents are based in is called Talis. Talis is as adjacent to Earth as possible, in the sense that there is a heaven and hell that are physically above and below Talis. Talis has seven main regions, and all NPCs within the project hail from one of these seven regions. Along with each region comes its own unique government, culture, economy, and more. These details are what comprise the modules that the model uses to create immersive dialogue. 
 
 The largest region is called Wei, and is based on China in regards to etymology and culture, as well as certain motifs that are important for the region’s characters. Wei is the strongest region in terms of magic, and is bordered by Valterre in the West. 
 
